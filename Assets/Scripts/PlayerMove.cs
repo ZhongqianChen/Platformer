@@ -9,6 +9,15 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D body;
     private Animator anim;
     private BoxCollider2D boxCollider;
+    public AudioClip t_Audio;
+
+    private void Start()
+    {
+
+        GetComponent<AudioSource>().playOnAwake = false;
+        GetComponent<AudioSource>().clip = t_Audio;
+
+    }
 
     private void Awake()
     {
@@ -38,7 +47,7 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && isGrounded())
+        if (Input.GetKey(KeyCode.W) && isGrounded())
         {
 
             Jump();
@@ -55,12 +64,9 @@ public class PlayerMove : MonoBehaviour
 
         body.velocity = new Vector2(body.velocity.x, speed);
 
+        GetComponent<AudioSource>().Play();
+
         anim.SetTrigger("Jump");
-
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
 
     }
 
@@ -70,6 +76,15 @@ public class PlayerMove : MonoBehaviour
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
 
         return raycastHit.collider != null;
+
+    }
+
+    public bool canAttack()
+    {
+
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+        return horizontalInput == 0 && isGrounded();
 
     }
 
